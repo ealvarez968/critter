@@ -29,63 +29,44 @@ public class PetService {
     @Autowired
     CustomerRepository customerRepository;
 
-    public PetDTO create(PetDTO petDTO){
-        //Pet pet = new Pet();
-        Optional<Customer> optionalCustomer = customerRepository.findById(petDTO.getOwnerId());
-        Customer customer = optionalCustomer.orElseThrow(CustomerNotFoundException::new);
-
-        Pet pet = convertPetDTOToPet(petDTO);
+    public Pet create(Pet pet, Customer customer){
 
         pet = petRepository.save(pet);
         customer.getPets().add(pet);
 
-        PetDTO savedPetDTO = new PetDTO();
-        BeanUtils.copyProperties(pet, savedPetDTO);
-
-        return convertPetToPetDTO(pet);
+        return pet;
     }
 
-    public PetDTO getById(Long id){
+    public Pet getById(Long id){
         Optional<Pet> optionalPet = petRepository.findById(id);
         Pet pet = optionalPet.orElseThrow(PetNotFoundException::new);
 
-        PetDTO petDTO = new PetDTO();
-        BeanUtils.copyProperties(pet, petDTO);
-        petDTO.setOwnerId(pet.getCustomer().getId());
-
-        return petDTO;
+        return pet;
 
     }
 
-    public List<PetDTO> getAllCustomers() {
-        List<Pet> pets = petRepository.findAll();
-        List<PetDTO> petDTOs = new ArrayList<>();
-        for (Pet p : pets){
-            petDTOs.add(convertPetToPetDTO(p));
-        }
-        return petDTOs;
+    public List<Pet> getAllCustomers() {
+        List<Pet> pets = new ArrayList<>();
+        pets.addAll(petRepository.findAll());
 
+        return pets;
 
     }
 
-    public List<PetDTO> getPetsByOwner(Long ownerId) {
+    public Customer getPetsByOwner(Long ownerId) {
 
         Optional<Customer> optionalCustomer = customerRepository.findById(ownerId);
         Customer customer = optionalCustomer.orElseThrow(CustomerNotFoundException::new);
 
+        return customer;
 
 
-        List<CustomerDTO> customerDTOS = new ArrayList<>();
+    }
 
-
-        List<Pet> pets = petRepository.findAll();
-        List<PetDTO> petDTOs = new ArrayList<>();
-        for (Pet p : customer.getPets()){
-            petDTOs.add(convertPetToPetDTO(p));
-        }
-        return petDTOs;
-
-
+    public Pet getPetById(Long Id){
+        Optional<Pet> optionalPet = petRepository.findById(Id);
+        Pet pet = optionalPet.orElseThrow(PetNotFoundException::new);
+        return pet;
     }
 
 
@@ -101,16 +82,7 @@ public class PetService {
         return petDTO;
     }
 
-    private Pet convertPetDTOToPet(PetDTO petDTO){
 
-        Optional<Customer> optionalCustomer = customerRepository.findById(petDTO.getOwnerId());
-        Customer customer = optionalCustomer.orElseThrow(CustomerNotFoundException::new);
-
-        Pet pet = new Pet();
-        BeanUtils.copyProperties(petDTO, pet);
-        pet.setCustomer(customer);
-        return pet;
-    }
 
 
 }

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             " join com.udacity.jdnd.course3.critter.user.EmployeeSkill es on es.id = e.id " +
             " where es.skills in :skills" )*/
     Set<Employee> findBySkillsInAndDaysAvailable(Set<EmployeeSkill> employeeSkill, DayOfWeek daysAvailable);
+
 
     /*@Query( "select e from Employee e " +
             " where e.skills in ( :skills )" )

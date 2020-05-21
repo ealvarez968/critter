@@ -6,6 +6,7 @@ import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 import javax.persistence.*;
 import java.time.DayOfWeek;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ public class Employee {
     //@CollectionTable(name = "DayOfWeek", joinColumns = @JoinColumn(name = "employee_id") )
     private Set<DayOfWeek> daysAvailable;
 
+    private LocalDate date;
 
     private String name;
 
@@ -75,5 +77,13 @@ public class Employee {
 
     public void setSchedules(List<Schedule> schedules) {
         this.schedules = schedules;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 }

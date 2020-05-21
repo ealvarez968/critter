@@ -2,6 +2,8 @@ package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Employee;
+import com.udacity.jdnd.course3.critter.entity.Pet;
+import com.udacity.jdnd.course3.critter.pet.PetController;
 import com.udacity.jdnd.course3.critter.pet.PetDTO;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
@@ -34,6 +36,9 @@ public class UserController {
     @Autowired
     private PetService petService;
 
+    @Autowired
+    private PetController petController;
+
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
 
@@ -58,7 +63,7 @@ public class UserController {
 
             CustomerDTO customerDTO = new CustomerDTO();
             BeanUtils.copyProperties(customer, customerDTO);
-            customerDTO.setPetIds(customer.getPets().stream().map(pet -> pet.getId()).collect(Collectors.toList()));
+            customerDTO.setPetIds(customerService.getPetIds(customers));
             customerDTOS.add(customerDTO);
         }
 
@@ -68,7 +73,8 @@ public class UserController {
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
 
-        Customer customer = customerService.getByPetId(petId);
+        Pet p = petService.getPetById(petId);
+        Customer customer = customerService.getByPetId(p);
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
         customerDTO.setPetIds(customer.getPets().stream().map(pet -> pet.getId()).collect(Collectors.toList()));
@@ -104,9 +110,28 @@ public class UserController {
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        //throw new UnsupportedOperationException();
-        //TODO:
-        return employeeService.findEmployeesForService(employeeDTO);
+
+        Employee emp = new Employee();
+        BeanUtils.copyProperties(employeeDTO, emp);
+
+        Set<Employee> employees = employeeService.findEmployeesForService(emp);
+
+        List<EmployeeDTO> employeeDTOS = new ArrayList<>();
+
+        for (Employee employee : employees){
+            EmployeeDTO savedemployeeDTO = new EmployeeDTO();
+            BeanUtils.copyProperties(employee, savedemployeeDTO);
+            if(emp.getSkills().size() == 1){
+                employeeDTOS.add(savedemployeeDTO);
+            }else if ( emp.getSkills().size() >= 2 ){
+
+                if(employee.getSkills().containsAll(emp.getSkills())){
+                    employeeDTOS.add(savedemployeeDTO);
+                }
+            }
+        }
+
+        return employeeDTOS;
     }
 
 

@@ -2,6 +2,7 @@ package com.udacity.jdnd.course3.critter.service;
 
 
 import com.udacity.jdnd.course3.critter.entity.Customer;
+import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.exception.CustomerNotFoundException;
 import com.udacity.jdnd.course3.critter.repository.CustomerRepository;
 
@@ -18,14 +19,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-@Transactional
+
 @Service
 public class CustomerService {
 
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    PetService petService;
 
+    @Transactional
     public Customer create(Customer customer) {
 
         customer = customerRepository.save(customer);
@@ -39,9 +43,9 @@ public class CustomerService {
         return customers;
     }
 
-    public Customer getByPetId(Long petId) {
+    public Customer getByPetId(Pet pet) {
 
-        Optional<Customer> optionalCustomer = customerRepository.findByPetsId(petId);
+        Optional<Customer> optionalCustomer = customerRepository.findById(pet.getCustomer().getId());
         Customer customer = optionalCustomer.orElseThrow(CustomerNotFoundException::new);
         return customer;
     }
@@ -53,11 +57,16 @@ public class CustomerService {
         return customer;
     }
 
-    private CustomerDTO convertCustomerToCustomerDTO(Customer customer){
-        CustomerDTO customerDTO = new CustomerDTO();
-        BeanUtils.copyProperties(customer, customerDTO);
-        customerDTO.setPetIds(customer.getPets().stream().map(pet -> pet.getId()).collect(Collectors.toList()));
-        return customerDTO;
+    public List<Long> getPetIds(List<Customer> customers){
+        List<Long> ids = new ArrayList<>();
+        for(Customer c: customers){
+            ids.addAll(c.getPets().stream().map(pet -> pet.getId()).collect(Collectors.toList()));
+        }
+
+        return ids;
+
+
     }
+
 
 }

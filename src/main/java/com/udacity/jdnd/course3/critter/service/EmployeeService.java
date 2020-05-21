@@ -52,13 +52,20 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
-    public List<EmployeeDTO>  findEmployeesForService(EmployeeRequestDTO employeeDTO){
+    public Set<Employee>  findEmployeesForService(Employee emp){
+        Set<Employee> employees =employeeRepository.findBySkillsInAndDaysAvailable(emp.getSkills(), emp.getDate().getDayOfWeek());
+
+        return employees;
+
+    }
+
+    /*public List<EmployeeDTO>  findEmployeesForService(EmployeeRequestDTO employeeDTO){
 
         Employee emp = new Employee();
         BeanUtils.copyProperties(employeeDTO, emp);
-        List<EmployeeSkill> mainList = new ArrayList<EmployeeSkill>();
+        List<EmployeeSkill> mainList = new ArrayList<>();
         mainList.addAll(emp.getSkills());
-        //employeeDTO.get
+
         Set<DayOfWeek> dayOfWeek = new HashSet<>();
         dayOfWeek.add(employeeDTO.getDate().getDayOfWeek());
        Set<Employee> employees =employeeRepository.findBySkillsInAndDaysAvailable(emp.getSkills(), employeeDTO.getDate().getDayOfWeek());
@@ -84,14 +91,9 @@ public class EmployeeService {
         }
         return employeeDTOS;
 
-    }
+    }*/
 
-    private EmployeeDTO convertEmployeeToEmployeeDTO(Employee employee){
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        BeanUtils.copyProperties(employee, employeeDTO);
-        //employeeDTO.setPetIds(customer.getPets().stream().map(pet -> pet.getId()).collect(Collectors.toList()));
-        return employeeDTO;
-    }
+
 
 
 }

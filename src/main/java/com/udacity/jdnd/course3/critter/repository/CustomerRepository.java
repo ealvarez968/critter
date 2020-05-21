@@ -13,10 +13,11 @@ import java.util.Optional;
 
 @Repository
 public interface CustomerRepository  extends JpaRepository<Customer, Long> {
-   @Query("select c from Customer c  " +
+   /*@Query("select c from Customer c  " +
             " join Pet p on p.customer.id  = c.id" +
             " where p.id = :petId  ")
-    Optional<Customer> findByPetsId(@Param("petId") Long petId);
+    Optional<Customer> findByPetsId(@Param("petId") Long petId);*/
+
 
     //Optional<Customer> findByPetsId(Long petsId);
 
