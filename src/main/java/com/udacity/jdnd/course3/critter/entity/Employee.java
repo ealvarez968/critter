@@ -21,6 +21,7 @@ public class Employee {
     //@CollectionTable(name = "DayOfWeek", joinColumns = @JoinColumn(name = "employee_id") )
     private Set<DayOfWeek> daysAvailable;
 
+
     private String name;
 
     @ElementCollection(fetch = FetchType.LAZY)

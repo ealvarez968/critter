@@ -13,7 +13,7 @@ public class Pet {
     @GeneratedValue
     private Long Id;
 
-    private PetType petType;
+    private PetType type;
 
     private String name;
     private LocalDate birthDate;
@@ -55,8 +55,8 @@ public class Pet {
         return birthDate;
     }
 
-    public PetType getPetType() {
-        return petType;
+    public PetType getType() {
+        return type;
     }
 
     public void setNotes(String notes) {
@@ -79,8 +79,8 @@ public class Pet {
         this.customer = customer;
     }
 
-    public void setPetType(PetType petType) {
-        this.petType = petType;
+    public void setType(PetType type) {
+        this.type = type;
     }
 
     public void setSchedules(List<Schedule> schedules) {

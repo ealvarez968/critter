@@ -10,12 +10,15 @@ import com.udacity.jdnd.course3.critter.user.CustomerDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+@Transactional
 @Service
 public class CustomerService {
 
@@ -23,29 +26,31 @@ public class CustomerService {
     CustomerRepository customerRepository;
 
 
-    public CustomerDTO create(CustomerDTO customerDTO) {
-        Customer customer = new Customer();
-        BeanUtils.copyProperties(customerDTO, customer);
+    public Customer create(Customer customer) {
+
         customer = customerRepository.save(customer);
 
-        return convertCustomerToCustomerDTO(customer);
+        return customer;
     }
 
-    public List<CustomerDTO> getAllCustomers() {
+    public List<Customer> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
-        List<CustomerDTO> customerDTOS = new ArrayList<>();
 
-        for (Customer customer : customers){
-            customerDTOS.add(convertCustomerToCustomerDTO(customer));
-        }
-        return customerDTOS;
+        return customers;
     }
 
-    public CustomerDTO getByPetId(Long petId) {
+    public Customer getByPetId(Long petId) {
 
         Optional<Customer> optionalCustomer = customerRepository.findByPetsId(petId);
         Customer customer = optionalCustomer.orElseThrow(CustomerNotFoundException::new);
-        return convertCustomerToCustomerDTO(customer);
+        return customer;
+    }
+
+
+    public Customer getById(Long Id){
+        Optional<Customer> optionalCustomer = customerRepository.findById(Id);
+        Customer customer = optionalCustomer.orElseThrow(CustomerNotFoundException::new);
+        return customer;
     }
 
     private CustomerDTO convertCustomerToCustomerDTO(Customer customer){

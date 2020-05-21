@@ -13,6 +13,7 @@ import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,26 +21,24 @@ import java.time.DayOfWeek;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class EmployeeService {
     @Autowired
     EmployeeRepository employeeRepository;
 
-    public EmployeeDTO create(EmployeeDTO employeeDTO) {
-        Employee employee = new Employee();
-        BeanUtils.copyProperties(employeeDTO, employee);
-        employee = employeeRepository.save(employee);
-        BeanUtils.copyProperties(employee, employeeDTO);
+    public Employee create(Employee employee) {
 
-        return employeeDTO;
+        employee = employeeRepository.save(employee);
+
+        return employee;
     }
 
-    public EmployeeDTO getById(Long id) {
+    public Employee getById(Long id) {
         Optional<Employee> optionalEmployee =employeeRepository.findById(id);
         Employee employee = optionalEmployee.orElseThrow(EmployeeNotFoundException::new);
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        BeanUtils.copyProperties(employee, employeeDTO);
-        return employeeDTO;
+
+        return employee;
     }
 
 
