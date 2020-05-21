@@ -37,6 +37,13 @@ public class PetService {
         return pet;
     }
 
+    public Pet create(Pet pet){
+
+        pet = petRepository.save(pet);
+
+        return pet;
+    }
+
     public Pet getById(Long id){
         Optional<Pet> optionalPet = petRepository.findById(id);
         Pet pet = optionalPet.orElseThrow(PetNotFoundException::new);

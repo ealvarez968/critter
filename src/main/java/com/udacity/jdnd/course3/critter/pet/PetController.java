@@ -9,6 +9,7 @@ import com.udacity.jdnd.course3.critter.user.CustomerDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.CustomEditorConfigurer;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,6 +38,20 @@ public class PetController {
         Customer customer = customerService.getById(petDTO.getOwnerId());
         pet.setCustomer(customer);
         pet = petService.create(pet, customer);
+        PetDTO newPetDTO = new PetDTO();
+        BeanUtils.copyProperties(pet, newPetDTO);
+        return newPetDTO;
+    }
+
+    @PostMapping("/{petId}")
+    public PetDTO saveOnlyPet(@RequestBody PetDTO petDTO, @PathVariable Long petId) {
+
+        Pet pet = new Pet();
+        BeanUtils.copyProperties(petDTO, pet);
+        Customer customer = customerService.getById(petDTO.getOwnerId());
+        pet.setCustomer(customer);
+        pet.setId(petId);
+        pet = petService.create(pet);
         PetDTO newPetDTO = new PetDTO();
         BeanUtils.copyProperties(pet, newPetDTO);
         return newPetDTO;
