@@ -15,7 +15,7 @@ import java.util.Set;
 public class Employee {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
     @ElementCollection(fetch = FetchType.LAZY)

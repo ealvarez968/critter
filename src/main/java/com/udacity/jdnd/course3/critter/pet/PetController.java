@@ -54,6 +54,8 @@ public class PetController {
         pet = petService.create(pet);
         PetDTO newPetDTO = new PetDTO();
         BeanUtils.copyProperties(pet, newPetDTO);
+
+        newPetDTO.setOwnerId(pet.getCustomer().getId());
         return newPetDTO;
     }
 
